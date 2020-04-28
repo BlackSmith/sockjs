@@ -39,7 +39,7 @@ class Session(object):
     exception = None
 
     def __init__(
-        self, id, handler, request, *, timeout=timedelta(seconds=10), debug=False
+        self, id, handler, request, *, timeout=timedelta(seconds=55), debug=False
     ):
         self.id = id
         self.handler = handler
@@ -142,6 +142,7 @@ class Session(object):
 
         if self._queue:
             frame, payload = self._queue.popleft()
+            self._tick()
             if pack:
                 if frame == FRAME_CLOSE:
                     return FRAME_CLOSE, close_frame(*payload)
@@ -258,7 +259,7 @@ class SessionManager(dict):
         app,
         handler,
         heartbeat=25.0,
-        timeout=timedelta(seconds=5),
+        timeout=timedelta(seconds=55),
         debug=False,
     ):
         self.name = name
